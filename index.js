@@ -4,9 +4,6 @@ const app = express();
 
 app.use('/',require('./routes'));
 
-
-
-
 app.listen(port,function(err){
     if(err){
         console.log(`There was error when trying to listen ${err}`);

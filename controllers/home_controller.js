@@ -1,3 +1,7 @@
 module.exports.home = function(req,res){
-    return res.end("<h1>Our codeial website up and running</h1>")
+    console.log(req.cookies);
+    res.cookie('user-id',100)
+    return res.render('home',{
+        title : "Home"
+    })
 }

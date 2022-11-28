@@ -2,7 +2,9 @@ const { model } = require("mongoose")
 const User = require('../models/user');
 
 module.exports.userProfile = function(req,res){
-    res.end('<h1> Its an user profile page </h1>')
+    res.render('users',{
+        title : 'Codeial | Users'
+    });
 }
 
 module.exports.userAccount = function(req,res){
@@ -11,6 +13,12 @@ module.exports.userAccount = function(req,res){
 
 // render the signIn page
 module.exports.userSignIn = function(req,res){
+
+    if(req.isAuthenticated()){
+        return res.redirect('profile');
+        
+    }
+
     res.render('user_SignIn',{
         title : 'Codeial | SignIn'
     });
@@ -18,16 +26,17 @@ module.exports.userSignIn = function(req,res){
 
 // render the signUp page
 module.exports.userSignUp = function(req,res){
+
+    if(req.isAuthenticated()){
+        return res.redirect('profile');
+        
+    }
+
     res.render('user_SignUp',{
         title : 'Codeial | SignUp'
     });
 }
 
-// sign in and create the session
-module.exports.createSession = function(req,res){
-
-    
-}
 // getting the signup details
 module.exports.create = function(req,res){
     if(req.body.password != req.body.confirm_password){
@@ -51,4 +60,23 @@ module.exports.create = function(req,res){
         }
 
     })
+}
+
+
+
+
+// sign in and create the session
+module.exports.createSession = function(req,res){
+    return res.redirect('profile');
+    
+}
+
+module.exports.destroySession = function(req,res){
+    req.logout(function(err){
+        if(err){
+            console.log(err, 'An error happened while signing out');
+        }
+
+        return res.redirect('/home');
+    });
 }

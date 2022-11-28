@@ -5,6 +5,11 @@ const port = 8000;
 const app = express();
 const expressLayout = require('express-ejs-layouts');
 const db = require('./config/mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const passportLocal = require('./config/passport-local-strategy');
+const MongoStore = require('connect-mongo');
+
 
 app.use(bodyParser.urlencoded());
 //saying the app use the cookieParser package
@@ -16,12 +21,37 @@ app.set('layout extractStyles',true);
 app.set('layout extractScripts',true);
 
 app.use(expressLayout);
-//use express router
-app.use('/',require('./routes'));
 
 // set up view engine 
 app.set('view engine','ejs');
 app.set('views','./views');
+
+//mongo store is used to store the session cookie in the DB
+app.use(session({
+    name : 'Codeial',
+    // TODO change the secrete before deploying
+    secret : 'Blah something',
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: (1000 * 60 * 100)
+    },
+    store: MongoStore.create(
+        {
+        mongoUrl: 'mongodb://localhost/codeial_development',
+        autoRemove: 'disabled'
+        },
+        function(err){
+        console.log(err || "connect-mongo setup ok!")
+        })
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(passport.setAuthenticatedUser)
+//use express router
+app.use('/',require('./routes'));
 
 // making the server listen on port
 app.listen(port,function(err){

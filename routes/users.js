@@ -4,10 +4,8 @@ const user = require('../controllers/users_controller');
 const passport = require('passport');
 
 
-router.get('/',function(req,res){
-    return res.render('users',{
-        title : 'Users'
-    })
+router.get('/',passport.checkAuthentication,function(req,res){
+    return res.redirect('user/profile');
 })
 
 router.get('/profile',passport.checkAuthentication,user.userProfile);

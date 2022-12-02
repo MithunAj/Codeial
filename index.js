@@ -9,7 +9,16 @@ const session = require('express-session');
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
 const MongoStore = require('connect-mongo');
+const sassMiddleware = require('node-sass-middleware');
 
+//setting up sassMiddleware to compiles as soon as the server boots up
+app.use(sassMiddleware({
+    src: './Assets/scss/',
+    dest: './Assets/css/',
+    debug: false,
+    outputStyle: 'extended',
+    prefix: '/css'
+}));
 
 app.use(bodyParser.urlencoded());
 //saying the app use the cookieParser package
@@ -49,7 +58,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(passport.setAuthenticatedUser)
+app.use(passport.setAuthenticatedUser);
 //use express router
 app.use('/',require('./routes'));
 

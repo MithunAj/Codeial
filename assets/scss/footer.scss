@@ -1,0 +1,18 @@
+#footer-container{
+    display: flex;
+    justify-content: space-around;
+    padding: 5px;
+    background-color: rgba(225, 255, 0, 0.954);
+        ul{
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            li{
+                display: block;
+            }
+        }
+                    
+}
+         

@@ -65,6 +65,7 @@ module.exports.userSignUp = function(req,res){
 module.exports.create = async function(req,res){
     try {
 	if(req.body.password != req.body.confirm_password){
+            req.flash('error','Passwords do not match')
 	        return res.redirect('back');
 	    }
 	    // new code with async await and try catch
@@ -105,6 +106,8 @@ module.exports.create = async function(req,res){
 
 // sign in and create the session
 module.exports.createSession = function(req,res){
+
+    req.flash('success','Logged in successfully');
     return res.redirect('/home');
     
 }
@@ -114,7 +117,7 @@ module.exports.destroySession = function(req,res){
         if(err){
             console.log(err, 'An error happened while signing out');
         }
-
+        req.flash('success','You are signed out!');
         return res.redirect('/home');
     });
 }

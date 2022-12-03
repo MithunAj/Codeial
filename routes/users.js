@@ -22,8 +22,8 @@ router.get('/SignUp',user.userSignUp);
 
 //use passport as a middleware
 router.post('/create-session',passport.authenticate('local',{
-    failureRedirect: '/user/signIn'
-},),user.createSession);
+    failureRedirect: '/users/signIn'
+}),user.createSession);
 
 router.post('/create',user.create);
 

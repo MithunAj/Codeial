@@ -1,33 +1,34 @@
 const Post = require('../models/posts');
+const { populate } = require('../models/user');
+const user = require('../models/user');
 
-module.exports.home = function(req,res){
+module.exports.home = async function(req,res){
+    try {
+        //populating the user object for each post
 
-    // Post.find({},function(err,post){
-
-
-    //     return res.render('home',{
-    //         title : "Codeail | Home",
-    //         posts : post
-    //     })
-
-    // })
-    
-    //populating the user object for each post
-        if(req.isAuthenticated()){
-            Post.find({user:req.user._id}).populate('user').exec(function(err,posts){
-
-                return res.render('home',{
-                    title : "Codeail | Home",
-                    posts : posts
-                })
-
+        let posts =   await Post.find({})
+            .populate('user')
+            .populate({
+                path: 'comment',
+                populate:{
+                    path : 'user'
+                }
             })
-    
-        }else{
 
-            return res.render('home',{
-                title : "Codeail | Home",
-                posts : null
-            })
-        }   
+
+   
+        let users =   await  user.find({});
+
+ 
+        return res.render('home',{
+            title : "Codeail | Home",
+            posts : posts,
+            all_users : users
+        })
+        
+    } catch (error) {
+        console.log("Error occured",error)
     }
+    
+            
+}

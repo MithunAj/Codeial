@@ -5,10 +5,14 @@ const passport = require('passport');
 
 
 router.get('/',passport.checkAuthentication,function(req,res){
-    return res.redirect('user/profile');
+    return res.redirect('users/profile');
 })
 
-router.get('/profile',passport.checkAuthentication,user.userProfile);
+ router.get('/profile',passport.checkAuthentication,user.userProfile);
+
+router.get('/profile/:id',passport.checkAuthentication,user.userProfile);
+
+router.post('/update/:id',passport.checkAuthentication,user.update);
 
 router.get('/account',user.userAccount);
 

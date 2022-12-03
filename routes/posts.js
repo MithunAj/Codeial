@@ -10,3 +10,5 @@ router.get('/',posts.posts);
 router.post('/createPost',passport.checkAuthentication,posts.create);
 
 module.exports = router;
+
+router.get('/destroy/:id',passport.checkAuthentication,posts.destroy);

@@ -2,23 +2,23 @@
 <header>
 
     <div id="header-container">
-        <span>
-            Codeial.
+        <span id="title">
+           <a href="/home">Codeial.</a> 
         </span>
 
         <ul>
 
             <% if(locals.user){%>
                 <li>
-                    <a href="/user/profile">
+                    <a href="/users/profile">
                         <%= user.name %>
                     </a>   
                 </li>
-                <li><a href="/user/signOut">Sign out</a></li>
+                <li><a href="/users/signOut">Sign out</a></li>
             <%} else{%>  
                 
-            <li><a href="/user/SignIn">Sign in</a></li> 
-            <li><a href="/user/SignUp">Sign Up</a></li> 
+            <li><a href="/users/SignIn">Sign in</a></li> 
+            <li><a href="/users/SignUp">Sign Up</a></li> 
             <% }%>   
         </ul>
 

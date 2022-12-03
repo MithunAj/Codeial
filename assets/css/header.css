@@ -16,3 +16,6 @@
     #header-container ul li {
       margin: 5px;
       list-style: none; }
+  #header-container #title a {
+    text-decoration: none;
+    color: black; }

@@ -1,21 +1,79 @@
 const Post = require('../models/posts');
-
-
+const comment = require('../models/comments');
+;
 module.exports.posts = function(req,res){
     res.end('<h1> This is posts page... haha</h1>')
 }
 
-module.exports.create = function(req,res){
+module.exports.create = async function(req,res){
     
-    Post.create({
-        content : req.body.content,
-        user: req.user._id
-    },function(err,post){
-        if(err){
-            console.log('Error in creating the post');
-        }
+    try {
 
+        await Post.create({
+            content : req.body.content,
+            user: req.user._id
+        });
+        
         return res.redirect('back');
-    })
+    } catch (error) {
+        console.log("Error occured",error);
+        return;
+    }
 
+    
+
+    // old code without try catch and async await
+    // Post.create({
+    //     content : req.body.content,
+    //     user: req.user._id
+    // },function(err,post){
+    //     if(err){
+    //         console.log('Error in creating the post');
+    //     }
+
+    //     return res.redirect('back');
+    // })
+
+}
+
+
+module.exports.destroy = async function(req,res){
+
+    try {
+        let post = await Post.findById(req.params.id);
+     
+        if(post.user == req.user.id){
+            post.remove();
+            await comment.deleteMany({
+                post : req.params.id
+            })
+            return res.redirect('back');
+        }else{
+            return res.redirect('back');
+        }    
+    
+    } catch (error) {
+        console.log("Error occure",error);
+        return;
+    }
+    
+
+    // Post.findById(req.params.id,function(err,post){
+    //     // .id means coverting the object id to string
+    //     if(post.user == req.user.id){
+    //         post.remove();
+    //         comment.deleteMany({
+    //             post : req.params.id
+    //         },function(err){
+    //             if(err){
+    //                 console.log(err);
+    //             }
+    //             return res.redirect('back');
+    //         })
+    //     }else{
+
+    //     return res.redirect('back');
+    //     }
+    // });
+    
 }

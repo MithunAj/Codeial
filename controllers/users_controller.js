@@ -1,5 +1,8 @@
 const { model } = require("mongoose")
 const User = require('../models/user');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 module.exports.userProfile = function(req,res){
     if(req.params.id){
@@ -19,15 +22,37 @@ module.exports.userProfile = function(req,res){
 }
 
 
-module.exports.update = function(req,res){
+module.exports.update = async function(req,res){
+
     if(req.params.id == req.user.id){
-        User.findByIdAndUpdate(req.params.id,req.body,function(err,user){
-            user.save();
-            return res.redirect('/home');
-        })
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id);
+            User.uploadedAvatar(req,res,function(err){
+                if(err){
+                    console.log('Multer Error', err);
+                }
+
+                user.name = req.body.name;
+                user.email = req.body.email;
+
+                if(req.file){
+                    // this is saving path of the uploaded file in the avatar field of the user
+                    if(fs.existsSync(path.join(__dirname, '..' , user.avatar))){
+                        fs.unlinkSync(path.join(__dirname, '..' , user.avatar));
+                    }
+                    user.avatar = User.avatarPath + '/' + req.file.filename // or directly req.file.path will also do the same thing;
+                }
+                user.save();
+                return res.redirect('back');
+            })
+        } catch (error) {
+            req.flash('error',error);
+            return res.redirect('back');
+        }
     }else{
         return res.status(401).send('Unauthorized');
     }
+
 }
 
 

@@ -27,6 +27,8 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 
 app.use(express.static('./assets'));
+// make route uploads path available to browser
+app.use('/uploads',express.static(__dirname + '/uploads'));
 //extract the style and scripts from subpages to the layout pages head
 app.set('layout extractStyles',true);
 app.set('layout extractScripts',true);
@@ -63,7 +65,6 @@ app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
 app.use(flash());
 app.use(customMware.setFlash);
-
 //use express router
 app.use('/',require('./routes'));
 

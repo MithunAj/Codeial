@@ -3,15 +3,31 @@ const User = require('../models/user');
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const friendships = require('../models/friendship');
+const { kMaxLength } = require("buffer");
 
-module.exports.userProfile = function(req,res){
+module.exports.userProfile = async function(req,res){
     if(req.params.id){
-        User.findById(req.params.id,function(err,user){
-            return res.render('user_Profile',{
-                title : 'Codeial | Users',
-                profile_user : user
-            });
-        })
+        let friends;
+       
+        let user = await User.findById(req.params.id);
+        let friendship = await friendships.findOne({$or:[{from_user:req.params.id},{from_user:user.id},{from_user:user.id},{to_user:req.params.id}]});
+
+       
+        if(friendship===null){
+            friends = false;
+        }else{
+            friends = true;
+        }
+ 
+
+        return res.render('user_Profile',{
+            title : 'Codeial | Users',
+            profile_user : user,
+            friendship : friends
+        });
+    // }
+        
     }else{
         return res.render('user_Profile',{
             title : 'Codeial | My Profile',
@@ -145,4 +161,30 @@ module.exports.destroySession = function(req,res){
         req.flash('success','You are signed out!');
         return res.redirect('/home');
     });
+}
+
+// to add the user as a friend and create a friendship model in the collection
+module.exports.addFriend = function(req,res){
+    friendships.create({
+        from_user: req.user.id,
+        to_user:req.params.id
+    }, function(err,friendship){
+        if(err){
+            console.log('Error in craeting the friendship',err);
+            return;
+        }
+        // this is to push the created friendship object to the array of friendship objects in User model
+        req.user.friendships.push(friendship);
+        // req.user.friendships.save();
+        res.redirect('/home');
+    })
+}
+
+// to remove the frienship from friendship collection
+module.exports.removeFriend = async function(req,res){
+    
+    let friendship = await friendships.findOne({$or:[{from_user:req.params.id},{to_user:req.params.id}]});
+    friendship.remove();
+
+    return res.redirect('/home');
 }

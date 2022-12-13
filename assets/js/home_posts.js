@@ -29,6 +29,7 @@
                     $('#posts-list-container>ul').prepend(postCreated);
                     postCreatedNoty.show();
                     deletePost($(`#${data.data.post._id}`));
+                    new ToggleLike($('.like-button'),postCreated);
                     // deletePost($(' .delete-post-button,postCreated'))
                 },
                 error: function(err){
@@ -53,6 +54,9 @@
               <br>
               <small>
                     ${username}
+              </small>
+              <small>
+                <a class="like-button" data-likes=${0} href="/likes/toggle/?id=${post._id}&type=posts">0 Likes</a>
               </small>
         </p>
     
@@ -100,4 +104,5 @@
     for(let obj of allX){
         deletePost(obj);
     }
+
 }

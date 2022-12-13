@@ -11,7 +11,11 @@
                 <%= post.user.name%>
           </small>
     </p>
-
+    <% if(locals.user){%>
+            <small><a class='like-button' data-likes= '<%= post.likes.length %>' href="/likes/toggle/?id=<%=post.id%>&type=posts"><%= post.likes.length %> Likes</a></small>
+    <%} else {%>
+           <small> <%= post.likes.length %> Likes </small>
+      <%}%>
     <div class="post-comments">
           <% if(locals.user) {%>
                 

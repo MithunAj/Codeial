@@ -8,6 +8,7 @@ router.get('/home',homeController.home);
 router.use('/users',require('./users'));
 router.use('/posts',require('./posts'));
 router.use('/comments',require('./comments'));
+router.use('/likes',require('./likes'));
 //router.get('/user',require('./users'));
 // for any further routes, use router.use('/routeName',require('./route file'));
 

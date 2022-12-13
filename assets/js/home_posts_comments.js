@@ -15,6 +15,7 @@
                         let newComment = commentCreated(data.data.comment,data.data.userName);
                         $(`#post-comments-${data.data.comment.post}`).prepend(newComment);
                         deletComment(`#${data.data.comment._id}`);
+                        new ToggleLike($(' .like-button'),newComment);
                     },
                     error: function(err){
                         console.log(err,"An error occured");
@@ -37,6 +38,7 @@
                 ${comment.content}
             </p>
             <small> ${username}</small>
+            <small><a class='like-button' data-likes=${0} href="likes/toggle/?id=${comment._id}&type=comments">0 Likes</a></small>
         </li>
             `)
     };
@@ -63,5 +65,8 @@
     for(let comment of commentsList){
         deletComment(comment);
     }
+
+
+
     createComments();
 }

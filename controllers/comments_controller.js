@@ -3,6 +3,8 @@ const Post = require('../models/posts');
 const commentMailer = require('../mailers/comments_mailer')
 const commentEmailWorker = require('../workers/comment_email_worker');
 const queue = require('../config/kue')
+const Like = require('../models/likes');
+
 module.exports.create = async function(req,res){
 
 
@@ -26,7 +28,7 @@ module.exports.create = async function(req,res){
                     return;
                 }
 
-                console.log('Job enqueued',job.id);
+                // console.log('Job enqueued',job.id);
             })
             if(req.xhr){
                 return res.status(200).json({
@@ -78,6 +80,7 @@ module.exports.destroy = async function(req,res){
 	        const postId = comment.post;
 	        await Post.findByIdAndUpdate(postId,{$pull : {comment:req.params.id}});
 	        comment.remove();
+            await Like.deleteMany({likeable:comment._id,onModel:'comment'})
             if(req.xhr){
                 return res.status(200).json({
                     data:{

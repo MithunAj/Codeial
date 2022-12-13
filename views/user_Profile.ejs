@@ -1,9 +1,9 @@
 
 <link rel="stylesheet" href="/css/users.css">
-<img id="image-container" src="<%=user.avatar%>" alt="<%= user.name%>" width="100">
 
 <% if(user.id == profile_user.id){%>
 <!-- If user matches show the update form or else just the user information -->
+  <img id="image-container" src="<%=user.avatar%>" alt="<%= user.name%>" width="100">
   <form action="/users/update/<%=user.id%>" method="POST" enctype="multipart/form-data">
       <input type="text" name="name" placeholder="Your name" value="<%=profile_user.name%>" required>
       <input type="email" name="email" placeholder="Your email" value="<%=profile_user.email%>" required>
@@ -12,8 +12,11 @@
   </form>
 
 <% } else { %>
-
   <p><%= profile_user.name%></p>
   <p><%= profile_user.email%></p> 
-
+  <% if(!friendship){%>
+      <a href="/users/addFriend/<%=profile_user.id%>">Add as friend</a>
+  <%} else { %>
+      <a href="/users/removeFriend/<%=profile_user.id%>">Remove from friends</a>
+  <%}%>
 <% } %>  

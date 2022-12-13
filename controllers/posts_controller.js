@@ -1,6 +1,6 @@
 const Post = require('../models/posts');
 const comment = require('../models/comments');
-;
+const Like = require('../models/likes');
 module.exports.posts = function(req,res){
     res.end('<h1> This is posts page... haha</h1>')
 }
@@ -58,6 +58,14 @@ module.exports.destroy = async function(req,res){
         
 
         if(post.user == req.user.id){
+
+            await Like.deleteMany({
+                likeable:post,
+                onModel: 'posts'
+            })
+
+            await Like.deleteMany({id:{$in:post.comment}});
+
             post.remove();
             
             await comment.deleteMany({

@@ -23,14 +23,41 @@
       </section>
       
       <section id="user-friends">
-            <h3>Friends</h3>
-            <% for(u of all_users) {%>
-                  <p>
-                        <a href="/users/profile/<%= u.id%>"><%= u.name%></a>
-                  </p>
-            <% } %>
+            <div>
+                  <h3>Users</h3>
+                        <% for(u of all_users) {%>
+                              <p>
+                                    <a href="/users/profile/<%= u.id%>"><%= u.name%></a>
+                              </p>
+                        <% } %>
+            </div>
+            <br>
+            <br>
+            <div>
+                  
+                  <% if(friends){%>
+                        <h3>Friends</h3>
+                        <% for (friend of friends) {%>
+                              <p>
+                                    <% if(friend.from_user.name == user.name){%>      
+                                    <a href="/users/profile/<%=friend.to_user.id%>"><%= friend.to_user.name%></a>
+                                    <%} else {%>
+                                     <a href="/users/profile/<%=friend.from_user.id%>"><%= friend.from_user.name%></a>     
+                                    <%}%>      
+                              </p>
+                         <% }%>   
+                  <%}%>         
+            </div>
       </section>
 </div>
 
+
 <script src="/js/home_posts.js"></script>
 <script src="/js/home_posts_comments.js"></script>
+<script src="/js/toggle_likes.js"></script>
+<script>
+      $('.like-button').each(function(){
+            let self = this;
+            let toggleLike = new ToggleLike(self);
+      })
+</script>

@@ -1,7 +1,7 @@
 const User = require('../../../models/user');
 const jwt = require('jsonwebtoken');
 const { render } = require('ejs');
-
+const env = require('../../../config/environment')
 // to create the JWT token and send it back with an JSON response.
 module.exports.createSession = async function(req,res){
     
@@ -16,7 +16,7 @@ module.exports.createSession = async function(req,res){
         return res.json(200,{
             message : 'SignIn successfull, her is the token',
             data : {
-                JwtToken : jwt.sign(user.toJSON(),'codeial',{expiresIn: '100000'})
+                JwtToken : jwt.sign(user.toJSON(),env.jwt_key,{expiresIn: '100000'})
             }
         })
 
